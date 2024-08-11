@@ -70,3 +70,25 @@ export const userLogout = async (req, res, next) => {
         next(error);
     }
 };
+
+// refresh token
+export const userTokenRefresh = async (req, res, next) => {
+
+    const { token } = req.body;
+    if (!token) return res.status(400).send({ message: "Token is required for refresh." });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findById(decoded.id);
+        if (!user) return res.status(404).send({ message: "User not found." });
+
+        const newToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        const updatedUser = await User.findByIdAndUpdate(user._id, { token: newToken }, { new: true }).select('-password');
+
+        res.status(200).send({ updatedUser });
+    } catch (error) {
+        next(error);
+    }
+};
