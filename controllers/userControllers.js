@@ -74,7 +74,7 @@ export const userLogout = async (req, res, next) => {
 // refresh token
 export const userTokenRefresh = async (req, res, next) => {
 
-    const { token } = req.body;
+    const { token } = req.headers;
     if (!token) return res.status(400).send({ message: "Token is required for refresh." });
 
     try {
@@ -87,7 +87,7 @@ export const userTokenRefresh = async (req, res, next) => {
 
         const updatedUser = await User.findByIdAndUpdate(user._id, { token: newToken }, { new: true }).select('-password');
 
-        res.status(200).send({ updatedUser });
+        res.status(200).send({ token: newToken });
     } catch (error) {
         next(error);
     }
