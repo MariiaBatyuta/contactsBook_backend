@@ -1,0 +1,473 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.1",
+    "title": "Contacts Book",
+    "description": "API documentation for Contacts Book",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "https://contacts-book-backend-1wxz.onrender.com" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Contacts",
+      "description": "Contacts endpoints"
+    },
+    {
+      "name": "Server Warm Up",
+      "description": "Server warmed up endpoints"
+    }
+  ],
+  "paths": {
+     "/users/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "requestBody": {
+          "description": "Registration object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Registration_Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "requestBody": {
+          "description": "Login object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Login_Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Logout_Response"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/getContact/{id}": {
+      "get": {
+        "tags": ["Contacts"],
+        "summary": "Get a contact by ID",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the contact to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/getContacts": {
+      "get": {
+        "tags": ["Contacts"],
+        "summary": "Get all contacts",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Contact"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contacts not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/addContact": {
+      "post": {
+        "tags": ["Contacts"],
+        "summary": "Create a new contact",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Contact creation object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/New_Contact"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid contact data",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/editContact/{id}": {
+      "put": {
+        "tags": ["Contacts"],
+        "summary": "Update a contact by ID",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the contact to update"
+          }
+        ],
+        "requestBody": {
+          "description": "Contact update object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Edit_Contact"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid contact data",
+            "content": {}
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/deleteContact/{id}": {
+      "delete": {
+        "tags": ["Contacts"],
+        "summary": "Delete a contact by ID",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the contact to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/warm-up": {
+      "get": {
+        "tags": ["Server Warm Up"],
+        "summary": "Server Warm Up",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Registration_Request": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Alex"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "example": "123456"
+          }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "Registration_Response": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "Alex"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "token": {
+            "type": "string",
+            "example": "bkjk232323-wv22r23rvsd-2r2k2k3"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Login_Request": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "example": "123456"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "Login_Response": {
+        "type": "object",
+        "properties": {
+           "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "Alex"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "token": {
+            "type": "string",
+            "example": "bkjk232323-wv22r23rvsd-2r2k2k3"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Logout_Response": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Contact": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        }
+      },
+      "New_Contact": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "required": ["title", "icon", "background"]
+      },
+      "Edit_Contact": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
