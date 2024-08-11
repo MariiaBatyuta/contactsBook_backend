@@ -11,7 +11,7 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "https://contacts-book-backend-1wxz.onrender.com" }],
+  "servers": [{ "url": "https://contactsbook-backend-j0i5.onrender.com/api" }],
   "tags": [
     {
       "name": "Auth",

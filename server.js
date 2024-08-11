@@ -20,7 +20,7 @@ app.use(express.json());
 app.use("/api/users", authRouter);
 app.use("/api/contacts", contactsRouter);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
 
 app.get("api/warm-up", (req, res, next) => {
     try {
