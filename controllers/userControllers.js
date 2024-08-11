@@ -16,7 +16,7 @@ export const userRegister = async (req, res, next) => {
         const user = await User.findOne({ email: email.toLowerCase() });
         if (user) return res.status(409).send({ message: "Email in use." });
 
-        const passwordHash = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hashSync(password, 10);
 
         const createUser = await User.create({
             name,
